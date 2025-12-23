@@ -1,13 +1,16 @@
+<!-- MenuBar.vue -->
 <template>
   <nav class="menu-bar">
-    <!-- IZQUIERDA -->
-    <div class="menu-left">
-      <slot name="logo" />
-    </div>
+    <div class="menu-container">
+      <!-- IZQUIERDA -->
+      <div class="menu-left">
+        <slot name="logo" />
+      </div>
 
-    <!-- DERECHA -->
-    <div class="menu-right">
-      <slot />
+      <!-- DERECHA -->
+      <div class="menu-right">
+        <slot />
+      </div>
     </div>
   </nav>
 </template>
@@ -17,26 +20,44 @@
 
 <style scoped>
 .menu-bar {
-  display: flex;
-  align-items: center;
-  padding: 0.75rem 1.5rem;
-  background: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
-  background-color: #061f1d;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 100;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
-/* logo */
+.menu-container {
+  display: flex;
+  align-items: center;
+  padding: 0.875rem 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
 .menu-left {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 }
 
-/* menú */
 .menu-right {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-left: auto; /* 👈 CLAVE */
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+@media (max-width: 768px) {
+  .menu-container {
+    padding: 0.75rem 1rem;
+  }
+
+  .menu-right {
+    gap: 0.25rem;
+  }
 }
 </style>
-
