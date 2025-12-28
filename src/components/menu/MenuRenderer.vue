@@ -82,8 +82,8 @@ const isAuthenticated = ref(false)
 const filteredItems = computed(() =>
   props.items.filter(item => {
     if (item.auth === 'both') return true
-    if (item.auth === 'guest') return false
-    if (item.auth === 'user') return true
+    if (item.auth === 'guest') return !isAuthenticated.value
+    if (item.auth === 'user') return false
     return true
   })
 )
