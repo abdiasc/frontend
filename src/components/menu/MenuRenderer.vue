@@ -73,6 +73,7 @@ import MenuItem from './MenuItem.vue'
 import MenuDropdown from './MenuDropdown.vue'
 import MenuAvatar from './MenuAvatar.vue'
 
+
 const props = defineProps({
   items: Array
 })
