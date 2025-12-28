@@ -1594,7 +1594,7 @@ export default {
     border-radius: 3px;
     background: #e2e8f0;
     outline: none;
-    -webkit-appearance: none;
+    appearance: none;
 }
 
 .slider-container input[type="range"]::-webkit-slider-thumb {
