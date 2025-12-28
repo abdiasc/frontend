@@ -63,16 +63,20 @@
               type="button"
               class="toggle-password"
               @click="showPassword = !showPassword"
-              :aria-label="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+              :aria-label="
+                showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'
+              "
             >
-              <span class="eye-icon">{{ showPassword ? '👁️' : '👁️‍🗨️' }}</span>
+              <span class="eye-icon">{{ showPassword ? "👁️" : "👁️‍🗨️" }}</span>
             </button>
           </div>
           <div class="password-strength" v-if="form.password">
             <div class="strength-bar" :class="passwordStrength"></div>
             <p class="strength-text">{{ strengthText }}</p>
           </div>
-          <p v-if="errors.password" class="error-message">{{ errors.password }}</p>
+          <p v-if="errors.password" class="error-message">
+            {{ errors.password }}
+          </p>
         </div>
 
         <div class="form-group">
@@ -95,12 +99,20 @@
               type="button"
               class="toggle-password"
               @click="showConfirmPassword = !showConfirmPassword"
-              :aria-label="showConfirmPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+              :aria-label="
+                showConfirmPassword
+                  ? 'Ocultar contraseña'
+                  : 'Mostrar contraseña'
+              "
             >
-              <span class="eye-icon">{{ showConfirmPassword ? '👁️' : '👁️‍🗨️' }}</span>
+              <span class="eye-icon">{{
+                showConfirmPassword ? "👁️" : "👁️‍🗨️"
+              }}</span>
             </button>
           </div>
-          <p v-if="errors.confirmPassword" class="error-message">{{ errors.confirmPassword }}</p>
+          <p v-if="errors.confirmPassword" class="error-message">
+            {{ errors.confirmPassword }}
+          </p>
         </div>
 
         <div class="terms-group">
@@ -111,18 +123,22 @@
             class="terms-checkbox"
           />
           <label for="terms" class="terms-label">
-            Acepto los 
-            <a href="#" class="terms-link" @click.prevent="showTerms = true">términos y condiciones</a>
-            y la 
-            <a href="#" class="terms-link" @click.prevent="showPrivacy = true">política de privacidad</a>
+            Acepto los
+            <a href="#" class="terms-link" @click.prevent="showTerms = true"
+              >términos y condiciones</a
+            >
+            y la
+            <a href="#" class="terms-link" @click.prevent="showPrivacy = true"
+              >política de privacidad</a
+            >
           </label>
         </div>
         <p v-if="errors.terms" class="error-message">{{ errors.terms }}</p>
 
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           class="submit-btn"
-          :class="{ 'loading': isLoading }"
+          :class="{ loading: isLoading }"
           :disabled="isLoading || !isFormValid"
         >
           <span v-if="!isLoading">Crear cuenta</span>
@@ -130,8 +146,10 @@
         </button>
 
         <div class="login-link">
-          ¿Ya tienes una cuenta? 
-          <a href="#" class="link" @click.prevent="$emit('switch-to-login')">Inicia sesión</a>
+          ¿Ya tienes una cuenta?
+          <a href="#" class="link" @click.prevent="$emit('switch-to-login')"
+            >Inicia sesión</a
+          >
         </div>
       </form>
     </div>
@@ -151,50 +169,55 @@
 </template>
 
 <script setup>
-import { reactive, ref, computed, watch } from 'vue'
+import axios from "axios";
+import { reactive, ref, computed, watch } from "vue";
 
 const form = reactive({
-  name: '',
-  email: '',
-  password: '',
-  confirmPassword: ''
-})
+  name: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+});
 
 const errors = reactive({
-  name: '',
-  email: '',
-  password: '',
-  confirmPassword: '',
-  terms: ''
-})
+  name: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+  terms: "",
+});
 
-const acceptedTerms = ref(false)
-const showPassword = ref(false)
-const showConfirmPassword = ref(false)
-const isLoading = ref(false)
-const showTerms = ref(false)
-const showPrivacy = ref(false)
+const acceptedTerms = ref(false);
+const showPassword = ref(false);
+const showConfirmPassword = ref(false);
+const isLoading = ref(false);
+const showTerms = ref(false);
+const showPrivacy = ref(false);
 
 // Computed properties
 const passwordStrength = computed(() => {
-  if (!form.password) return 'empty'
-  if (form.password.length < 6) return 'weak'
-  if (form.password.length < 8) return 'medium'
-  if (/[A-Z]/.test(form.password) && /[0-9]/.test(form.password) && /[^A-Za-z0-9]/.test(form.password)) {
-    return 'strong'
+  if (!form.password) return "empty";
+  if (form.password.length < 6) return "weak";
+  if (form.password.length < 8) return "medium";
+  if (
+    /[A-Z]/.test(form.password) &&
+    /[0-9]/.test(form.password) &&
+    /[^A-Za-z0-9]/.test(form.password)
+  ) {
+    return "strong";
   }
-  return 'medium'
-})
+  return "medium";
+});
 
 const strengthText = computed(() => {
   const texts = {
-    empty: '',
-    weak: 'Débil',
-    medium: 'Media',
-    strong: 'Fuerte'
-  }
-  return texts[passwordStrength.value]
-})
+    empty: "",
+    weak: "Débil",
+    medium: "Media",
+    strong: "Fuerte",
+  };
+  return texts[passwordStrength.value];
+});
 
 const isFormValid = computed(() => {
   return (
@@ -203,133 +226,140 @@ const isFormValid = computed(() => {
     form.password &&
     form.confirmPassword &&
     acceptedTerms.value &&
-    Object.values(errors).every(error => !error) &&
+    Object.values(errors).every((error) => !error) &&
     form.password === form.confirmPassword
-  )
-})
+  );
+});
 
 // Methods
 const validateField = (field) => {
-  errors[field] = ''
-  
-  switch(field) {
-    case 'name':
+  errors[field] = "";
+
+  switch (field) {
+    case "name":
       if (!form.name.trim()) {
-        errors.name = 'El nombre es requerido'
+        errors.name = "El nombre es requerido";
       } else if (form.name.length < 2) {
-        errors.name = 'El nombre debe tener al menos 2 caracteres'
+        errors.name = "El nombre debe tener al menos 2 caracteres";
       }
-      break
-      
-    case 'email':
+      break;
+
+    case "email":
       if (!form.email) {
-        errors.email = 'El correo es requerido'
+        errors.email = "El correo es requerido";
       } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-        errors.email = 'Ingresa un correo válido'
+        errors.email = "Ingresa un correo válido";
       }
-      break
-      
-    case 'password':
+      break;
+
+    case "password":
       if (!form.password) {
-        errors.password = 'La contraseña es requerida'
+        errors.password = "La contraseña es requerida";
       } else if (form.password.length < 6) {
-        errors.password = 'Mínimo 6 caracteres'
+        errors.password = "Mínimo 6 caracteres";
       }
-      break
-      
-    case 'confirmPassword':
+      break;
+
+    case "confirmPassword":
       if (!form.confirmPassword) {
-        errors.confirmPassword = 'Confirma tu contraseña'
+        errors.confirmPassword = "Confirma tu contraseña";
       } else if (form.password !== form.confirmPassword) {
-        errors.confirmPassword = 'Las contraseñas no coinciden'
+        errors.confirmPassword = "Las contraseñas no coinciden";
       }
-      break
+      break;
   }
-}
+};
 
 const validateEmail = () => {
   if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-    errors.email = 'Ingresa un correo válido'
+    errors.email = "Ingresa un correo válido";
   } else {
-    errors.email = ''
+    errors.email = "";
   }
-}
+};
 
 const validatePassword = () => {
   if (form.password && form.password.length < 6) {
-    errors.password = 'Mínimo 6 caracteres'
+    errors.password = "Mínimo 6 caracteres";
   } else {
-    errors.password = ''
+    errors.password = "";
   }
-  
+
   if (form.confirmPassword && form.password !== form.confirmPassword) {
-    errors.confirmPassword = 'Las contraseñas no coinciden'
+    errors.confirmPassword = "Las contraseñas no coinciden";
   } else if (form.confirmPassword) {
-    errors.confirmPassword = ''
+    errors.confirmPassword = "";
   }
-}
+};
 
 const validatePasswordMatch = () => {
   if (form.confirmPassword && form.password !== form.confirmPassword) {
-    errors.confirmPassword = 'Las contraseñas no coinciden'
+    errors.confirmPassword = "Las contraseñas no coinciden";
   } else {
-    errors.confirmPassword = ''
+    errors.confirmPassword = "";
   }
-}
+};
 
 const handleRegister = async () => {
   // Validar todos los campos
-  Object.keys(form).forEach(field => validateField(field))
-  
+  Object.keys(form).forEach((field) => validateField(field));
+
   if (!acceptedTerms.value) {
-    errors.terms = 'Debes aceptar los términos y condiciones'
-    return
+    errors.terms = "Debes aceptar los términos y condiciones";
+    return;
   }
-  
-  if (Object.values(errors).some(error => error)) {
-    return
+
+  if (Object.values(errors).some((error) => error)) {
+    return;
   }
-  
-  isLoading.value = true
-  
+
+  isLoading.value = true;
+
   try {
-    // Simulación de API call
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    
-    console.log('Datos de registro:', {
-      name: form.name,
-      email: form.email,
-      password: form.password
-    })
-    
-    // Éxito
-    alert('¡Cuenta creada exitosamente!')
-    
-    // Reset
-    resetForm()
-    
+    // Llamada real al backend
+    const response = await axios.post(
+      "http://localhost:3000/api/auth/register",
+      {
+        nombre_completo: form.name,
+        correo: form.email,
+        password: form.password,
+      }
+    );
+
+    console.log("Respuesta del backend:", response.data);
+
+    alert("¡Cuenta creada exitosamente!");
+
+    resetForm();
   } catch (error) {
-    errors.form = 'Error al crear la cuenta. Intenta nuevamente.'
+    console.error("Error al registrar usuario:", error);
+
+    if (error.response && error.response.data) {
+      // Mensaje desde backend
+      alert(error.response.data.message || "Error al crear la cuenta");
+    } else {
+      alert("Error de conexión con el servidor");
+    }
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 
 const resetForm = () => {
-  form.name = ''
-  form.email = ''
-  form.password = ''
-  form.confirmPassword = ''
-  acceptedTerms.value = false
-  Object.keys(errors).forEach(key => errors[key] = '')
-}
+  form.name = "";
+  form.email = "";
+  form.password = "";
+  form.confirmPassword = "";
+  acceptedTerms.value = false;
+  Object.keys(errors).forEach((key) => (errors[key] = ""));
+};
 
 // Watchers
 watch(acceptedTerms, (value) => {
   if (value) {
-    errors.terms = ''
+    errors.terms = "";
   }
-})
+});
 </script>
 
 <style scoped>
@@ -340,7 +370,7 @@ watch(acceptedTerms, (value) => {
   justify-content: center;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 20px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .register-card {
@@ -559,7 +589,9 @@ input:focus {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .login-link {
@@ -605,8 +637,12 @@ input:focus {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {

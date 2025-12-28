@@ -67,7 +67,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import MenuBar from './MenuBar.vue'
 import MenuItem from './MenuItem.vue'
 import MenuDropdown from './MenuDropdown.vue'
@@ -83,15 +83,24 @@ const filteredItems = computed(() =>
   props.items.filter(item => {
     if (item.auth === 'both') return true
     if (item.auth === 'guest') return !isAuthenticated.value
-    if (item.auth === 'user') return false
+    if (item.auth === 'user') return isAuthenticated.value
     return true
   })
 )
-
+onMounted(() => {
+  const token = localStorage.getItem('token')
+  isAuthenticated.value = !!token
+})
 const handleAction = (item) => {
-  if (item.to) window.location.href = item.to
-  if (item.action === 'logout') isAuthenticated.value = false
+  if (item.to) router.push(item.to)
+  if (item.action === 'logout') {
+    localStorage.removeItem('token')
+    isAuthenticated.value = false
+    userRoles.value = []
+    router.push('/login')
+  }
 }
+
 </script>
 
 <style scoped>

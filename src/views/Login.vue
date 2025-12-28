@@ -53,12 +53,16 @@
               type="button"
               class="toggle-password"
               @click="showPassword = !showPassword"
-              :aria-label="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+              :aria-label="
+                showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'
+              "
             >
-              <span class="eye-icon">{{ showPassword ? '👁️' : '👁️‍🗨️' }}</span>
+              <span class="eye-icon">{{ showPassword ? "👁️" : "👁️‍🗨️" }}</span>
             </button>
           </div>
-          <p v-if="errors.password" class="error-message">{{ errors.password }}</p>
+          <p v-if="errors.password" class="error-message">
+            {{ errors.password }}
+          </p>
         </div>
 
         <div class="form-options">
@@ -71,8 +75,12 @@
             />
             <label for="remember" class="remember-label">Recordarme</label>
           </div>
-          
-          <a href="#" class="forgot-password" @click.prevent="showForgotPassword = true">
+
+          <a
+            href="#"
+            class="forgot-password"
+            @click.prevent="showForgotPassword = true"
+          >
             ¿Olvidaste tu contraseña?
           </a>
         </div>
@@ -83,10 +91,10 @@
           {{ errors.form }}
         </div>
 
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           class="submit-btn"
-          :class="{ 'loading': isLoading }"
+          :class="{ loading: isLoading }"
           :disabled="isLoading || !isFormValid"
         >
           <span v-if="!isLoading">Iniciar sesión</span>
@@ -100,31 +108,50 @@
 
         <!-- Botones sociales -->
         <div class="social-login">
-          <button type="button" class="social-btn google" @click="loginWithGoogle">
+          <button
+            type="button"
+            class="social-btn google"
+            @click="loginWithGoogle"
+          >
             <span class="social-icon">G</span>
             Google
           </button>
-          <button type="button" class="social-btn github" @click="loginWithGithub">
+          <button
+            type="button"
+            class="social-btn github"
+            @click="loginWithGithub"
+          >
             <span class="social-icon">Git</span>
             GitHub
           </button>
         </div>
 
         <div class="register-link">
-          ¿No tienes una cuenta? 
-          <a href="#" class="link" @click.prevent="$emit('switch-to-register')">Regístrate</a>
+          ¿No tienes una cuenta?
+          <a href="#" class="link" @click.prevent="$emit('switch-to-register')"
+            >Regístrate</a
+          >
         </div>
       </form>
     </div>
 
     <!-- Modal de recuperación de contraseña -->
-    <div v-if="showForgotPassword" class="modal-overlay" @click.self="showForgotPassword = false">
+    <div
+      v-if="showForgotPassword"
+      class="modal-overlay"
+      @click.self="showForgotPassword = false"
+    >
       <div class="modal">
         <h3>Recuperar contraseña</h3>
         <div class="modal-content">
-          <p>Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.</p>
+          <p>
+            Ingresa tu correo electrónico y te enviaremos un enlace para
+            restablecer tu contraseña.
+          </p>
           <div class="form-group">
-            <label for="reset-email" class="form-label">Correo electrónico</label>
+            <label for="reset-email" class="form-label"
+              >Correo electrónico</label
+            >
             <input
               id="reset-email"
               v-model="resetEmail"
@@ -136,10 +163,17 @@
           </div>
         </div>
         <div class="modal-actions">
-          <button class="modal-btn secondary" @click="showForgotPassword = false">
+          <button
+            class="modal-btn secondary"
+            @click="showForgotPassword = false"
+          >
             Cancelar
           </button>
-          <button class="modal-btn primary" @click="handlePasswordReset" :disabled="isResetting">
+          <button
+            class="modal-btn primary"
+            @click="handlePasswordReset"
+            :disabled="isResetting"
+          >
             <span v-if="!isResetting">Enviar enlace</span>
             <span v-else class="loading-spinner small"></span>
           </button>
@@ -148,17 +182,29 @@
     </div>
 
     <!-- Modal de verificación de email -->
-    <div v-if="showVerificationModal" class="modal-overlay" @click.self="showVerificationModal = false">
+    <div
+      v-if="showVerificationModal"
+      class="modal-overlay"
+      @click.self="showVerificationModal = false"
+    >
       <div class="modal">
         <div class="verification-icon">📧</div>
         <h3>Verifica tu correo</h3>
         <div class="modal-content">
-          <p>Hemos enviado un enlace de verificación a tu correo electrónico.</p>
+          <p>
+            Hemos enviado un enlace de verificación a tu correo electrónico.
+          </p>
           <p class="email-sent">{{ verificationEmail }}</p>
-          <p>Por favor, revisa tu bandeja de entrada y haz clic en el enlace para activar tu cuenta.</p>
+          <p>
+            Por favor, revisa tu bandeja de entrada y haz clic en el enlace para
+            activar tu cuenta.
+          </p>
         </div>
         <div class="modal-actions">
-          <button class="modal-btn primary" @click="showVerificationModal = false">
+          <button
+            class="modal-btn primary"
+            @click="showVerificationModal = false"
+          >
             Entendido
           </button>
           <button class="modal-btn link" @click="resendVerification">
@@ -171,205 +217,188 @@
 </template>
 
 <script setup>
-import { reactive, ref, computed, onMounted } from 'vue'
+import axios from "axios";
+import { reactive, ref, computed, onMounted } from "vue";
 
 // Props para manejar flujos como registro exitoso
 const props = defineProps({
   registeredEmail: {
     type: String,
-    default: ''
+    default: "",
   },
   showVerification: {
     type: Boolean,
-    default: false
-  }
-})
+    default: false,
+  },
+});
 
-const emit = defineEmits(['switch-to-register', 'login-success'])
+const emit = defineEmits(["switch-to-register", "login-success"]);
 
 const form = reactive({
-  email: '',
-  password: ''
-})
+  email: "",
+  password: "",
+});
 
 const errors = reactive({
-  email: '',
-  password: '',
-  form: ''
-})
+  email: "",
+  password: "",
+  form: "",
+});
 
-const successMessage = ref('')
-const showPassword = ref(false)
-const rememberMe = ref(false)
-const isLoading = ref(false)
-const showForgotPassword = ref(false)
-const showVerificationModal = ref(false)
-const resetEmail = ref('')
-const resetError = ref('')
-const isResetting = ref(false)
+const successMessage = ref("");
+const showPassword = ref(false);
+const rememberMe = ref(false);
+const isLoading = ref(false);
+const showForgotPassword = ref(false);
+const showVerificationModal = ref(false);
+const resetEmail = ref("");
+const resetError = ref("");
+const isResetting = ref(false);
 
 // Computed properties
 const isFormValid = computed(() => {
-  return form.email && form.password && Object.values(errors).every(error => !error)
-})
+  return (
+    form.email &&
+    form.password &&
+    Object.values(errors).every((error) => !error)
+  );
+});
 
 // Métodos
 const validateEmail = () => {
   if (!form.email.trim()) {
-    errors.email = 'El correo es requerido'
+    errors.email = "El correo es requerido";
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-    errors.email = 'Ingresa un correo válido'
+    errors.email = "Ingresa un correo válido";
   } else {
-    errors.email = ''
+    errors.email = "";
   }
-}
+};
 
 const validatePassword = () => {
   if (!form.password) {
-    errors.password = 'La contraseña es requerida'
+    errors.password = "La contraseña es requerida";
   } else {
-    errors.password = ''
+    errors.password = "";
   }
-}
+};
 
 const clearError = (field) => {
-  errors[field] = ''
-  errors.form = ''
-}
+  errors[field] = "";
+  errors.form = "";
+};
 
 const handleLogin = async () => {
-  // Validar campos
-  validateEmail()
-  validatePassword()
-  
-  if (errors.email || errors.password) {
-    return
-  }
-  
-  isLoading.value = true
-  errors.form = ''
-  
+  validateEmail();
+  validatePassword();
+
+  if (errors.email || errors.password) return;
+
+  isLoading.value = true;
+  errors.form = "";
+
   try {
-    // Simulación de API call
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    
-    // Aquí normalmente verificarías con tu backend
-    console.log('Login attempt:', {
-      email: form.email,
+    const response = await axios.post("http://localhost:3000/api/auth/login", {
+      correo: form.email,
       password: form.password,
-      rememberMe: rememberMe.value
-    })
-    
-    // Simular diferentes casos de error
-    const mockResponses = [
-      { success: true, message: 'Login exitoso' },
-      { success: false, error: 'Credenciales incorrectas' },
-      { success: false, error: 'Cuenta no verificada', needsVerification: true }
-    ]
-    
-    const response = mockResponses[Math.floor(Math.random() * mockResponses.length)]
-    
-    if (response.success) {
-      // Login exitoso
-      successMessage.value = '¡Bienvenido de vuelta!'
-      
-      // Guardar en localStorage si "Recordarme" está activado
-      if (rememberMe.value) {
-        localStorage.setItem('rememberedEmail', form.email)
-      } else {
-        localStorage.removeItem('rememberedEmail')
-      }
-      
-      // Emitir evento de éxito
-      emit('login-success', { email: form.email })
-      
-      // Redirigir (simulado)
-      setTimeout(() => {
-        alert('Redirigiendo al dashboard...')
-        // En una app real: router.push('/dashboard')
-      }, 1000)
-      
+    });
+
+    const data = response.data;
+
+    // Guardar token JWT si backend lo devuelve
+    if (data.token) {
+      localStorage.setItem("token", data.token);
+      if (rememberMe.value) localStorage.setItem("rememberedEmail", form.email);
+      else localStorage.removeItem("rememberedEmail");
+
+      emit("login-success", { email: form.email });
+      alert("Login exitoso, redirigiendo al dashboard...");
+      // Aquí podrías hacer: router.push('/dashboard')
     } else {
-      // Manejar errores
-      if (response.needsVerification) {
-        showVerificationModal.value = true
-        verificationEmail.value = form.email
-      } else {
-        errors.form = response.error
-      }
+      errors.form = data.message || "Error al iniciar sesión";
     }
-    
   } catch (error) {
-    errors.form = 'Error de conexión. Intenta nuevamente.'
+    if (error.response && error.response.data) {
+      errors.form = error.response.data.message || "Credenciales incorrectas";
+      if (error.response.data.needsVerification) {
+        showVerificationModal.value = true;
+        verificationEmail.value = form.email;
+      }
+    } else {
+      errors.form = "Error de conexión con el servidor";
+    }
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 
 const loginWithGoogle = () => {
-  console.log('Login con Google')
+  console.log("Login con Google");
   // Implementar OAuth con Google
-  alert('Login con Google (simulado)')
-}
+  alert("Login con Google (simulado)");
+};
 
 const loginWithGithub = () => {
-  console.log('Login con GitHub')
+  console.log("Login con GitHub");
   // Implementar OAuth con GitHub
-  alert('Login con GitHub (simulado)')
-}
+  alert("Login con GitHub (simulado)");
+};
 
 const handlePasswordReset = async () => {
-  if (!resetEmail.value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(resetEmail.value)) {
-    resetError.value = 'Ingresa un correo válido'
-    return
+  if (
+    !resetEmail.value ||
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(resetEmail.value)
+  ) {
+    resetError.value = "Ingresa un correo válido";
+    return;
   }
-  
-  isResetting.value = true
-  
+
+  isResetting.value = true;
+
   try {
     // Simular envío de email
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    alert(`Se ha enviado un enlace de recuperación a ${resetEmail.value}`)
-    showForgotPassword.value = false
-    resetEmail.value = ''
-    resetError.value = ''
-    
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    alert(`Se ha enviado un enlace de recuperación a ${resetEmail.value}`);
+    showForgotPassword.value = false;
+    resetEmail.value = "";
+    resetError.value = "";
   } catch (error) {
-    resetError.value = 'Error al enviar el correo'
+    resetError.value = "Error al enviar el correo";
   } finally {
-    isResetting.value = false
+    isResetting.value = false;
   }
-}
+};
 
 const resendVerification = () => {
-  console.log('Reenviando verificación a:', verificationEmail.value)
-  alert('Correo de verificación reenviado')
-}
+  console.log("Reenviando verificación a:", verificationEmail.value);
+  alert("Correo de verificación reenviado");
+};
 
 // Cargar email recordado al montar
 onMounted(() => {
-  const rememberedEmail = localStorage.getItem('rememberedEmail')
+  const rememberedEmail = localStorage.getItem("rememberedEmail");
   if (rememberedEmail) {
-    form.email = rememberedEmail
-    rememberMe.value = true
+    form.email = rememberedEmail;
+    rememberMe.value = true;
   }
-  
+
   // Mostrar mensaje de registro exitoso si viene de registro
   if (props.registeredEmail) {
-    form.email = props.registeredEmail
-    successMessage.value = '¡Cuenta creada exitosamente! Por favor, inicia sesión.'
+    form.email = props.registeredEmail;
+    successMessage.value =
+      "¡Cuenta creada exitosamente! Por favor, inicia sesión.";
     setTimeout(() => {
-      successMessage.value = ''
-    }, 5000)
+      successMessage.value = "";
+    }, 5000);
   }
-  
+
   // Mostrar modal de verificación si es necesario
   if (props.showVerification) {
-    showVerificationModal.value = true
-    verificationEmail.value = form.email
+    showVerificationModal.value = true;
+    verificationEmail.value = form.email;
   }
-})
+});
 </script>
 
 <style scoped>
@@ -568,9 +597,16 @@ input:focus {
 }
 
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  75% { transform: translateX(5px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
 }
 
 .submit-btn {
@@ -617,7 +653,9 @@ input:focus {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes slideDown {
@@ -642,7 +680,7 @@ input:focus {
 
 .separator::before,
 .separator::after {
-  content: '';
+  content: "";
   flex: 1;
   border-bottom: 1px solid #e2e8f0;
 }
@@ -811,8 +849,12 @@ input:focus {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
