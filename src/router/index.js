@@ -39,11 +39,11 @@ const routes = [
         },
         {
           path: "portafolio",
-          component: () => import("@/views/admin/Portfolio.vue"),
+          component: () => import("@/views/admin/Portafolio.vue"),
         },
         {
           path: "ordenes",
-          component: () => import("@/views/admin/Orders.vue"),
+          component: () => import("@/views/admin/Clientes.vue"),
         },
         {
           path: "reportes",

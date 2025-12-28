@@ -55,8 +55,8 @@ export default {
       menuItems: [
         { path: '/admin', iconComponent: DashboardIcon, label: 'Dashboard' },
         { path: '/admin/usuarios', iconComponent: UsersIcon, label: 'Usuarios' },
-        { path: '/admin/productos', iconComponent: PortafolioIcon, label: 'Portafolio' },
-        { path: '/admin/ordenes', iconComponent: ClientIcon, label: 'Clientes' },
+        { path: '/admin/portafolio', iconComponent: PortafolioIcon, label: 'Portafolio' },
+        { path: '/admin/clientes', iconComponent: ClientIcon, label: 'Clientes' },
         { path: '/admin/reportes', iconComponent: ReportsIcon, label: 'Reportes' },
         { path: '/admin/configuracion', iconComponent: ConfigIcon, label: 'Configuración' }
       ],
