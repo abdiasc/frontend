@@ -20,7 +20,7 @@ import AdminMenu from "@/components/admin/AdminMenu.vue";
 
 .admin-content {
   flex: 1;
-  padding: 1.5rem;
+  padding: 1rem;
   margin-left: 260px;
 }
 </style>

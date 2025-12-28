@@ -42,7 +42,7 @@ const routes = [
           component: () => import("@/views/admin/Portafolio.vue"),
         },
         {
-          path: "ordenes",
+          path: "clientes",
           component: () => import("@/views/admin/Clientes.vue"),
         },
         {
