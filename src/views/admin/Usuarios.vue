@@ -15,7 +15,9 @@
     <!-- Filters -->
     <div class="filters">
       <div class="search-box">
-        <span class="search-icon">🔍</span>
+        <span class="search-icon">
+          <img style="width: 22px; height: 22px;" src="../../../public/images/icons/search.svg" alt="Buscar">
+        </span>
         <input 
           type="text" 
           placeholder="Buscar usuario..." 
@@ -87,10 +89,10 @@
             <td>
               <div class="actions">
                 <button class="action-btn" title="Editar" @click="editUser(user)">
-                  ✏️
+                  <img style="width: 22px; height: 22px;" src="../../../public/images/icons/edit.svg" alt="Editar">
                 </button>
                 <button class="action-btn" title="Eliminar" @click="deleteUser(user)">
-                  🗑️
+                  <img style="width: 22px; height: 22px;" src="../../../public/images/icons/trash.svg" alt="Eliminar">
                 </button>
               </div>
             </td>
@@ -314,7 +316,7 @@ export default {
 }
 
 .search-box input {
-  width: 100%;
+  width: 90%;
   padding: 0.75rem 1rem 0.75rem 2.75rem;
   border: 1px solid #e5e7eb;
   border-radius: 0.5rem;

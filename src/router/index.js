@@ -38,8 +38,8 @@ const routes = [
           component: () => import("@/views/admin/Usuarios.vue"),
         },
         {
-          path: "productos",
-          component: () => import("@/views/admin/Products.vue"),
+          path: "portafolio",
+          component: () => import("@/views/admin/Portfolio.vue"),
         },
         {
           path: "ordenes",

@@ -7,14 +7,9 @@
 
     <!-- Navegación -->
     <nav class="nav">
-      <router-link 
-        v-for="item in menuItems" 
-        :key="item.path"
-        :to="item.path" 
-        class="nav-item" 
-        exact-active-class="router-link-active"
-      >
-        <span class="icon">{{ item.icon }}</span>
+      <router-link v-for="item in menuItems" :key="item.path" :to="item.path" class="nav-item"
+        exact-active-class="router-link-active">
+        <component :is="item.iconComponent" class="menu-icon icon-svg "/>
         <span>{{ item.label }}</span>
       </router-link>
     </nav>
@@ -36,17 +31,34 @@
 </template>
 
 <script>
+import { markRaw } from 'vue'
+import DashboardIcon from './icons/dashboard.svg'
+import UsersIcon from './icons/users.svg'
+import PortafolioIcon from './icons/portafolio.svg'
+import ClientIcon from './icons/clients.svg'
+import ReportsIcon from './icons/reporte.svg'
+import ConfigIcon from './icons/config.svg'
 export default {
+
   name: 'AdminMenu',
+  components: {
+    DashboardIcon: markRaw(DashboardIcon),
+    UsersIcon: markRaw(UsersIcon),
+    PortafolioIcon: markRaw(PortafolioIcon),
+    ClientIcon: markRaw(ClientIcon),
+    ReportsIcon: markRaw(ReportsIcon),
+    ConfigIcon: markRaw(ConfigIcon),
+    //LogoutIcon: markRaw(LogoutIcon)
+  },
   data() {
     return {
       menuItems: [
-        { path: '/admin', icon: '📊', label: 'Dashboard' },
-        { path: '/admin/usuarios', icon: '👥', label: 'Usuarios' },
-        { path: '/admin/productos', icon: '📦', label: 'Productos' },
-        { path: '/admin/ordenes', icon: '🛒', label: 'Órdenes' },
-        { path: '/admin/reportes', icon: '📈', label: 'Reportes' },
-        { path: '/admin/configuracion', icon: '⚙️', label: 'Configuración' }
+        { path: '/admin', iconComponent: DashboardIcon, label: 'Dashboard' },
+        { path: '/admin/usuarios', iconComponent: UsersIcon, label: 'Usuarios' },
+        { path: '/admin/productos', iconComponent: PortafolioIcon, label: 'Portafolio' },
+        { path: '/admin/ordenes', iconComponent: ClientIcon, label: 'Clientes' },
+        { path: '/admin/reportes', iconComponent: ReportsIcon, label: 'Reportes' },
+        { path: '/admin/configuracion', iconComponent: ConfigIcon, label: 'Configuración' }
       ],
       userName: 'Admin',
       userRole: 'Administrador'
@@ -132,6 +144,16 @@ export default {
   align-items: center;
   justify-content: center;
   width: 20px;
+}
+
+.icon-svg {
+  width: 18px;
+  height: 18px;
+  opacity: 0.9;
+}
+
+.nav-item.active .icon-svg {
+  opacity: 1;
 }
 
 /* User Section */
