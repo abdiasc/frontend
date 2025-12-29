@@ -73,6 +73,8 @@ import MenuItem from './MenuItem.vue'
 import MenuDropdown from './MenuDropdown.vue'
 import MenuAvatar from './MenuAvatar.vue'
 
+import { useUserStore } from '@/stores/user.store'
+const userStore = useUserStore()
 
 const props = defineProps({
   items: Array

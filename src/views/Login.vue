@@ -219,6 +219,7 @@
 <script setup>
 import axios from "axios";
 import { reactive, ref, computed, onMounted } from "vue";
+import { useRouter } from "vue-router";
 
 // Props para manejar flujos como registro exitoso
 const props = defineProps({
@@ -233,7 +234,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["switch-to-register", "login-success"]);
-
+const router = useRouter();
 const form = reactive({
   email: "",
   password: "",
@@ -312,7 +313,7 @@ const handleLogin = async () => {
       else localStorage.removeItem("rememberedEmail");
 
       emit("login-success", { email: form.email });
-      alert("Login exitoso, redirigiendo al dashboard...");
+      router.push("/admin");
       // Aquí podrías hacer: router.push('/dashboard')
     } else {
       errors.form = data.message || "Error al iniciar sesión";

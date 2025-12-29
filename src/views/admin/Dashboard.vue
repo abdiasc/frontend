@@ -12,6 +12,17 @@
       </div>
     </div>
 
+    <!-- Banner Completar Perfil -->
+    <div v-if="!userStore.user?.hasProfileImage" class="profile-banner">
+      <div>
+        <strong>Completa tu perfil</strong>
+        <p>Agrega una imagen de perfil para personalizar tu cuenta.</p>
+      </div>
+      <button @click="goToProfile">
+        Completar ahora
+      </button>
+    </div>
+
     <!-- Stats Cards -->
     <div class="stats-grid">
       <div class="stat-card" v-for="stat in stats" :key="stat.label">
@@ -30,12 +41,8 @@
     <div class="section">
       <h2>Acciones Rápidas</h2>
       <div class="actions-grid">
-        <button 
-          v-for="action in quickActions" 
-          :key="action.label"
-          class="action-btn"
-          @click="handleAction(action.action)"
-        >
+        <button v-for="action in quickActions" :key="action.label" class="action-btn"
+          @click="handleAction(action.action)">
           <span class="action-icon">{{ action.icon }}</span>
           <span class="action-label">{{ action.label }}</span>
         </button>
@@ -59,57 +66,109 @@
 </template>
 
 <script>
+import axios from 'axios';
+import { useUserStore } from '@/stores/user.store';
+
 export default {
   name: 'DashboardHome',
+  setup() {
+    const userStore = useUserStore();
+    return { userStore };
+  },
+
   data() {
     return {
       currentDate: '',
       currentTime: '',
+      user: {
+        nombre: '',
+        email: '',
+        fotoPerfil: null,
+        hasProfileImage: false
+      },
+
       stats: [
         { icon: '👥', label: 'Usuarios Totales', value: '1,234', change: '+12%', trend: 'positive' },
         { icon: '📦', label: 'Productos', value: '567', change: '+8%', trend: 'positive' },
         { icon: '🛒', label: 'Órdenes', value: '89', change: '-3%', trend: 'negative' },
         { icon: '💰', label: 'Ingresos', value: '$45,678', change: '+15%', trend: 'positive' }
       ],
+
       quickActions: [
         { icon: '➕', label: 'Nuevo Usuario', action: 'newUser' },
         { icon: '📦', label: 'Agregar Producto', action: 'newProduct' },
         { icon: '📊', label: 'Ver Reportes', action: 'viewReports' },
         { icon: '⚙️', label: 'Configuración', action: 'settings' }
       ],
+
       recentActivity: [
         { id: 1, icon: '👤', text: 'Nuevo usuario registrado', time: 'Hace 5 minutos' },
         { id: 2, icon: '📦', text: 'Producto actualizado', time: 'Hace 15 minutos' },
         { id: 3, icon: '🛒', text: 'Nueva orden recibida', time: 'Hace 1 hora' },
         { id: 4, icon: '⚙️', text: 'Configuración modificada', time: 'Hace 2 horas' }
       ]
-    }
+    };
   },
+
   mounted() {
     this.updateDateTime();
     setInterval(this.updateDateTime, 1000);
+    this.fetchUser();
+    this.userStore.fetchUser();
   },
+
   methods: {
     updateDateTime() {
       const now = new Date();
-      this.currentDate = now.toLocaleDateString('es-ES', { 
-        weekday: 'long', 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
+      this.currentDate = now.toLocaleDateString('es-ES', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
       });
-      this.currentTime = now.toLocaleTimeString('es-ES', { 
-        hour: '2-digit', 
+      this.currentTime = now.toLocaleTimeString('es-ES', {
+        hour: '2-digit',
         minute: '2-digit'
       });
     },
+
+    async fetchUser() {
+      try {
+        const token = localStorage.getItem('token');
+
+        const { data } = await axios.get(
+          'http://localhost:3000/api/user/me',
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        );
+
+        this.user = data;
+
+      } catch (error) {
+        console.error('Error al obtener usuario', error);
+
+        // Token inválido o expirado
+        if (error.response?.status === 401) {
+          localStorage.removeItem('token');
+          this.$router.push('/login');
+        }
+      }
+    },
+
+    goToProfile() {
+      this.$router.push('/admin/profile');
+    },
+
     handleAction(action) {
       console.log('Acción:', action);
-      // Aquí puedes agregar la lógica para cada acción
     }
   }
-}
+};
 </script>
+
 
 <style scoped>
 .dashboard {
@@ -359,5 +418,25 @@ export default {
   .actions-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.profile-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff3cd;
+  border: 1px solid #ffeeba;
+  padding: 16px;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.profile-banner button {
+  background: #f59e0b;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
 }
 </style>

@@ -17,7 +17,9 @@
     <!-- User Section -->
     <div class="user-section">
       <div class="user-info">
-        <div class="avatar">{{ userInitial }}</div>
+        <div class="avatar">
+          <img :src="userStore.avatarUrl" class="avatar" />
+        </div>
         <div class="user-details">
           <span class="user-name">{{ userName }}</span>
           <span class="user-role">{{ userRole }}</span>
@@ -30,52 +32,42 @@
   </aside>
 </template>
 
-<script>
-import { markRaw } from 'vue'
+<script setup>
+import { markRaw, computed } from 'vue'
 import DashboardIcon from './icons/dashboard.svg'
 import UsersIcon from './icons/users.svg'
 import PortafolioIcon from './icons/portafolio.svg'
 import ClientIcon from './icons/clients.svg'
 import ReportsIcon from './icons/reporte.svg'
 import ConfigIcon from './icons/config.svg'
-export default {
 
-  name: 'AdminMenu',
-  components: {
-    DashboardIcon: markRaw(DashboardIcon),
-    UsersIcon: markRaw(UsersIcon),
-    PortafolioIcon: markRaw(PortafolioIcon),
-    ClientIcon: markRaw(ClientIcon),
-    ReportsIcon: markRaw(ReportsIcon),
-    ConfigIcon: markRaw(ConfigIcon),
-    //LogoutIcon: markRaw(LogoutIcon)
-  },
-  data() {
-    return {
-      menuItems: [
-        { path: '/admin', iconComponent: DashboardIcon, label: 'Dashboard' },
-        { path: '/admin/usuarios', iconComponent: UsersIcon, label: 'Usuarios' },
-        { path: '/admin/portafolio', iconComponent: PortafolioIcon, label: 'Portafolio' },
-        { path: '/admin/clientes', iconComponent: ClientIcon, label: 'Clientes' },
-        { path: '/admin/reportes', iconComponent: ReportsIcon, label: 'Reportes' },
-        { path: '/admin/configuracion', iconComponent: ConfigIcon, label: 'Configuración' }
-      ],
-      userName: 'Admin',
-      userRole: 'Administrador'
-    }
-  },
-  computed: {
-    userInitial() {
-      return this.userName.charAt(0).toUpperCase();
-    }
-  },
-  methods: {
-    handleLogout() {
-      // Aquí puedes agregar la lógica de cierre de sesión
-      console.log('Cerrando sesión...');
-      // Ejemplo: this.$router.push('/login');
-    }
-  }
+import { useUserStore } from '@/stores/user.store'
+const userStore = useUserStore()
+
+// Menú
+const menuItems = [
+  { path: '/admin', iconComponent: DashboardIcon, label: 'Dashboard' },
+  { path: '/admin/profile', iconComponent: DashboardIcon, label: 'Perfil' },
+  { path: '/admin/usuarios', iconComponent: UsersIcon, label: 'Usuarios' },
+  { path: '/admin/portafolio', iconComponent: PortafolioIcon, label: 'Portafolio' },
+  { path: '/admin/clientes', iconComponent: ClientIcon, label: 'Clientes' },
+  { path: '/admin/reportes', iconComponent: ReportsIcon, label: 'Reportes' },
+  { path: '/admin/configuracion', iconComponent: ConfigIcon, label: 'Configuración' }
+]
+
+// Nombre y rol dinámico desde la store
+const userName = computed(() => userStore.user?.nombre || 'Admin')
+const userRole = computed(() => userStore.user?.rol || 'Administrador')
+
+// Inicial de usuario
+const userInitial = computed(() => userName.value.charAt(0).toUpperCase())
+
+// Logout
+const handleLogout = () => {
+  console.log('Cerrando sesión...')
+  userStore.clearUser()
+  // Redirigir a login
+  window.location.href = '/login'
 }
 </script>
 
