@@ -29,7 +29,7 @@ export const menuConfig = [
     src: 'https://i.pravatar.cc/100',
     auth: 'user',
     children: [
-      { label: 'Perfil', to: '/perfil' },
+      { label: 'Perfil', to: '/admin/profile' },
       { label: 'Cerrar sesión', action: 'logout' }
     ]
   },

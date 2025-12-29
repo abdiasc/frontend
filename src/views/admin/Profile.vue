@@ -67,7 +67,8 @@
           <h3>Información de cuenta</h3>
           <div class="info-item">
             <span class="info-label">Miembro desde:</span>
-            <span class="info-value">{{ formatDate(userStore.createdAt) }}</span>
+            <span class="info-value"><p v-if="userStore.user">{{ userStore.user.fechaRegistro}}</p></span>
+            
           </div>
           <div class="info-item">
             <span class="info-label">Rol:</span>
@@ -90,11 +91,11 @@
           <div class="info-grid">
             <div class="info-field">
               <label>Nombre completo</label>
-              <p class="info-value">{{ userStore.fullName || 'No especificado' }}</p>
+              <p v-if="userStore.user">{{ userStore.user.nombre }}</p>
             </div>
             <div class="info-field">
               <label>Correo electrónico</label>
-              <p class="info-value">{{ userStore.email }}</p>
+              <p v-if="userStore.user">{{ userStore.user.email }}</p>
             </div>
             <div class="info-field">
               <label>Teléfono</label>
@@ -334,17 +335,20 @@ const showNotification = (type, message) => {
 onMounted(async () => {
   try {
     const token = localStorage.getItem('token');
-    const response = await axios.get(
-      'http://localhost:3000/api/user/preferences',
-      {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      }
-    );
-    Object.assign(preferences, response.data);
+    if (token) {
+      await userStore.fetchUser(); // <-- carga los datos del usuario
+      // Opcional: si tienes preferencias en tu API:
+      const { data } = await axios.get('http://localhost:3000/api/user/preferences', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      Object.assign(preferences, data);
+    }
   } catch (error) {
-    console.error('Error loading preferences:', error);
+    console.error('Error loading user or preferences:', {
+      message: error.message,
+      status: error.response?.status,
+      data: error.response?.data,
+    });
   }
 });
 </script>

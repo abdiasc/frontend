@@ -17,17 +17,17 @@ export const useUserStore = defineStore('user', {
   actions: {
     async fetchUser() {
       const token = localStorage.getItem('token');
+      if (!token) return this.clearUser(); // si no hay token, limpiar
 
-      const { data } = await axios.get(
-        'http://localhost:3000/api/user/me',
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
-
-      this.user = data;
+      try {
+        const { data } = await axios.get('http://localhost:3000/api/user/me', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        this.user = data;
+      } catch (error) {
+        console.error('Error fetching user:', error);
+        this.clearUser();
+      }
     },
 
     clearUser() {

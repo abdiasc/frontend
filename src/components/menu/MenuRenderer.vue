@@ -68,12 +68,16 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+
 import MenuBar from './MenuBar.vue'
 import MenuItem from './MenuItem.vue'
 import MenuDropdown from './MenuDropdown.vue'
 import MenuAvatar from './MenuAvatar.vue'
 
 import { useUserStore } from '@/stores/user.store'
+
+const router = useRouter()
 const userStore = useUserStore()
 
 const props = defineProps({
@@ -90,21 +94,30 @@ const filteredItems = computed(() =>
     return true
   })
 )
+
 onMounted(() => {
   const token = localStorage.getItem('token')
   isAuthenticated.value = !!token
+
+  if (isAuthenticated.value && !userStore.user) {
+    userStore.fetchUser()
+  }
 })
+
 const handleAction = (item) => {
-  if (item.to) router.push(item.to)
+  if (item.to) {
+    router.push(item.to)
+    return
+  }
+
   if (item.action === 'logout') {
-    localStorage.removeItem('token')
+    userStore.clearUser()
     isAuthenticated.value = false
-    userRoles.value = []
     router.push('/login')
   }
 }
-
 </script>
+
 
 <style scoped>
 .logo {

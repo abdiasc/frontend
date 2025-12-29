@@ -2,17 +2,31 @@
 <template>
   <div class="avatar" :title="name">
     <div class="avatar-image">
-      <img :src="src" :alt="name || 'avatar'" />
+      <img :src="userStore.avatarUrl" alt="Avatar" class="avatar" />
       <div class="avatar-status"></div>
     </div>
-    <span v-if="name" class="avatar-name">{{ name }}</span>
+    <span v-if="userStore.user?.nombre" class="avatar-name">
+      <!--{{ userStore.user.nombre }}-->
+    </span>
   </div>
 </template>
 
 <script setup>
+
+import { onMounted } from 'vue'
+
+import { useUserStore } from '@/stores/user.store'
+const userStore = useUserStore()
+
+// Si quieres pasar un nombre personalizado también, puedes mantener defineProps
 defineProps({
-  src: String,
   name: String
+})
+
+onMounted(async () => {
+  await userStore.fetchUser()
+  console.log('USER:', userStore.user)
+  console.log('AVATAR:', userStore.avatarUrl)
 })
 </script>
 
@@ -23,7 +37,6 @@ defineProps({
   gap: 0.75rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  padding: 0.5rem 0.75rem;
   border-radius: 10px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
