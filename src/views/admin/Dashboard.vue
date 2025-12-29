@@ -26,7 +26,7 @@
     <!-- Stats Cards -->
     <div class="stats-grid">
       <div class="stat-card" v-for="stat in stats" :key="stat.label">
-        <div class="stat-icon">{{ stat.icon }}</div>
+        <div class="stat-icon"><component :is="stat.iconComponent" /></div>
         <div class="stat-info">
           <span class="stat-label">{{ stat.label }}</span>
           <span class="stat-value">{{ stat.value }}</span>
@@ -43,7 +43,7 @@
       <div class="actions-grid">
         <button v-for="action in quickActions" :key="action.label" class="action-btn"
           @click="handleAction(action.action)">
-          <span class="action-icon">{{ action.icon }}</span>
+          <span class="action-icon"><component :is="action.iconComponent" class="icons" /></span>
           <span class="action-label">{{ action.label }}</span>
         </button>
       </div>
@@ -69,6 +69,15 @@
 import axios from 'axios';
 import { useUserStore } from '@/stores/user.store';
 
+import ProfileIcon from '@/components/admin/icons/user-blue.svg';
+import PortafolioIcon from '@/components/admin/icons/portafolio-blue.svg';
+import UsersIcon from '@/components/admin/icons/clients-blue.svg';
+import ReportsIcon from '@/components/admin/icons/reporte-blue.svg';
+import UserAddIcon from '@/components/admin/icons/user-add.svg';
+import ClientAddIcon from '@/components/admin/icons/clients-add.svg';
+import ReportsAddIcon from '@/components/admin/icons/reporte-add.svg';
+import SettingsIcon from '@/components/admin/icons/settings.svg';
+
 export default {
   name: 'DashboardHome',
   setup() {
@@ -88,17 +97,17 @@ export default {
       },
 
       stats: [
-        { icon: '👥', label: 'Usuarios Totales', value: '1,234', change: '+12%', trend: 'positive' },
-        { icon: '📦', label: 'Productos', value: '567', change: '+8%', trend: 'positive' },
-        { icon: '🛒', label: 'Órdenes', value: '89', change: '-3%', trend: 'negative' },
-        { icon: '💰', label: 'Ingresos', value: '$45,678', change: '+15%', trend: 'positive' }
+        { iconComponent: ProfileIcon, label: 'Usuarios Totales', value: '---', change: '+12%', trend: 'positive' },
+        { iconComponent: PortafolioIcon, label: 'Portafolio', value: '---', change: '+8%', trend: 'positive' },
+        { iconComponent: UsersIcon, label: 'Clientes', value: '---', change: '-3%', trend: 'negative' },
+        { iconComponent: ReportsIcon, label: 'Reportes', value: '---', change: '+15%', trend: 'positive' }
       ],
 
       quickActions: [
-        { icon: '➕', label: 'Nuevo Usuario', action: 'newUser' },
-        { icon: '📦', label: 'Agregar Producto', action: 'newProduct' },
-        { icon: '📊', label: 'Ver Reportes', action: 'viewReports' },
-        { icon: '⚙️', label: 'Configuración', action: 'settings' }
+        { iconComponent: UserAddIcon, label: 'Nuevo Usuario', action: 'newUser' },
+        { iconComponent: ClientAddIcon, label: 'Agregar Cliente', action: 'newProduct' },
+        { iconComponent: ReportsAddIcon, label: 'Ver Reportes', action: 'viewReports' },
+        { iconComponent: SettingsIcon, label: 'Configuración', action: 'settings' }
       ],
 
       recentActivity: [
@@ -438,5 +447,8 @@ export default {
   border-radius: 6px;
   color: white;
   cursor: pointer;
+}
+.icons{
+  margin: 10px;
 }
 </style>

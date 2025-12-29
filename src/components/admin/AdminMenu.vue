@@ -40,14 +40,17 @@ import PortafolioIcon from './icons/portafolio.svg'
 import ClientIcon from './icons/clients.svg'
 import ReportsIcon from './icons/reporte.svg'
 import ConfigIcon from './icons/config.svg'
+import HomeIcon from './icons/home.svg'
+import ProfileIcon from './icons/profile.svg'
 
 import { useUserStore } from '@/stores/user.store'
 const userStore = useUserStore()
 
 // Menú
 const menuItems = [
+  { path: '/', iconComponent: HomeIcon, label: 'Inicio' },
   { path: '/admin', iconComponent: DashboardIcon, label: 'Dashboard' },
-  { path: '/admin/profile', iconComponent: DashboardIcon, label: 'Perfil' },
+  { path: '/admin/profile', iconComponent: ProfileIcon, label: 'Perfil' },
   { path: '/admin/usuarios', iconComponent: UsersIcon, label: 'Usuarios' },
   { path: '/admin/portafolio', iconComponent: PortafolioIcon, label: 'Portafolio' },
   { path: '/admin/clientes', iconComponent: ClientIcon, label: 'Clientes' },

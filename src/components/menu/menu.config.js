@@ -12,6 +12,19 @@ export const menuConfig = [
     auth: 'both'
   },
   {
+    type: 'item',
+    label: 'Blog',
+    to: '/blog',
+    auth: 'both'
+  },
+  ,
+  {
+    type: 'item',
+    label: 'Portafolio',
+    to: '/portafolio',
+    auth: 'both'
+  },
+  {
     type: 'dropdown',
     label: 'Servicios',
     auth: 'both',

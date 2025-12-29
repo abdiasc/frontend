@@ -5,6 +5,8 @@ import PublicLayout from '@/layouts/PublicLayout.vue'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import Home from '@/views/Home.vue'
 import About from '@/views/About.vue'
+import Blog from '@/views/Blog.vue'
+import Portafolio from '@/views/Portafolio.vue'
 
 
 const routes = [
@@ -22,6 +24,16 @@ const routes = [
         path: '/sobre-nosotros',
         name: 'about',
         component: About
+      },
+      {
+        path: '/blog',
+        name: 'blog',
+        component: Blog
+      },
+      {
+        path: '/portafolio',
+        name: 'portafolio',
+        component: Portafolio
       },
       {
         path: '/login',
